@@ -89,14 +89,36 @@ struct DetailView: View {
                         .font(.headline)
                     }
 
-                    TextField("Partagez ici vos impressions sur cette pièce", text: $userComment)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.top, 4)
+                    ZStack(alignment: .topLeading) {
+                        TextEditor(text: $userComment)
+                            .frame(height: 120)
+                            .padding(12)
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                            )
+
+                        if userComment.isEmpty {
+                            Text("Partagez ici vos impressions sur cette pièce")
+                                .foregroundColor(.gray)
+                                .padding(.horizontal, 18)
+                                .padding(.vertical, 20)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                        
+                    
                 }
 
                 Spacer()
             }
             .padding()
+        }
+    
+    .onTapGesture {
+            hideKeyboard()
         }
         .navigationBarTitleDisplayMode(.inline)
     }
