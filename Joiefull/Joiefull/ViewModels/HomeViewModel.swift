@@ -9,10 +9,10 @@
 import Foundation
 
 class HomeViewModel: ObservableObject {
-    @Published var articles: [Article] = []
+    @Published var ratedArticles: [RatedArticle] = []
 
-    var groupedArticles: [String: [Article]] {
-        Dictionary(grouping: articles, by: { $0.category })
+    var groupedArticles: [String: [RatedArticle]] {
+        Dictionary(grouping: ratedArticles, by: { $0.article.category })
     }
 
     init() {
@@ -20,7 +20,10 @@ class HomeViewModel: ObservableObject {
     }
 
     private func loadArticles() {
-        self.articles = APIService.loadArticles()
+        let rawArticles = APIService.loadArticles()
+        self.ratedArticles = rawArticles.map {
+            RatedArticle(article: $0, rating: Double.random(in: 1.0...5.0))
+        }
     }
 
     func localizedCategory(_ category: String) -> String {
