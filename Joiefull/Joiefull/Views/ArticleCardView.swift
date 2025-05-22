@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ArticleCardView: View {
     let article: Article
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             AsyncImage(url: URL(string: article.picture.url)) { image in
@@ -23,34 +23,33 @@ struct ArticleCardView: View {
             .frame(height: 180)
             .clipped()
             .cornerRadius(12)
-
-            Text(article.name)
-                .font(.headline)
-                .lineLimit(1)
-
-            HStack(spacing: 4) {
-                Text("\(article.price, specifier: "%.0f")€")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-
-                if article.original_price > article.price {
-                    Text("\(article.original_price, specifier: "%.0f")€")
+            
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text(article.name)
+                        .font(.headline)
+                        .lineLimit(1)
+                    Spacer()
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.orange)
                         .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .strikethrough()
+                    Text("4.6")
+                        .font(.subheadline)
+                }
+                
+                HStack(spacing: 8) {
+                    Text("\(article.price, specifier: "%.0f")€")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    
+                    if article.original_price > article.price {
+                        Text("\(article.original_price, specifier: "%.0f")€")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .strikethrough()
+                    }
                 }
             }
-
-            HStack {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.orange)
-                Text("4.3") // à modifier ultérieurement
-                Spacer()
-                Image(systemName: "heart")
-                Text("\(article.likes)")
-            }
-            .font(.footnote)
-            .foregroundColor(.gray)
         }
     }
 }

@@ -24,7 +24,7 @@ struct HomeView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 16) {
                                     ForEach(viewModel.groupedArticles[category] ?? []) { article in
-                                        NavigationLink(destination: DetailView()) {
+                                        NavigationLink(destination: DetailView(article: article)) {
                                             ArticleCardView(article: article)
                                                 .frame(width: 200)
                                         }
@@ -38,7 +38,7 @@ struct HomeView: View {
                 }
                 .padding(.top)
             }
-            .navigationTitle("Joiefull")
+            .navigationTitle("Home")
         }
     }
 }
