@@ -9,9 +9,11 @@
 import SwiftUI
 
 struct ArticleCardView: View {
-    let article: Article
-    
+    let ratedArticle: RatedArticle
+
     var body: some View {
+        let article = ratedArticle.article
+        
         VStack(alignment: .leading, spacing: 8) {
             AsyncImage(url: URL(string: article.picture.url)) { image in
                 image
@@ -33,7 +35,7 @@ struct ArticleCardView: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(.orange)
                         .font(.subheadline)
-                    Text("4.6")
+                    Text(String(format: "%.1f", ratedArticle.rating))
                         .font(.subheadline)
                 }
                 

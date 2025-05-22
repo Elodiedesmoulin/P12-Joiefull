@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-import SwiftUI
 
 struct DetailView: View {
-    let article: Article
+    let ratedArticle: RatedArticle
     @State private var userRating: Int = 0
     @State private var userComment: String = ""
 
     var body: some View {
+        let article = ratedArticle.article
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
 
@@ -49,7 +49,7 @@ struct DetailView: View {
                         Image(systemName: "star.fill")
                             .foregroundColor(.orange)
                             .font(.subheadline)
-                        Text("4.6")
+                        Text(String(format: "%.1f", ratedArticle.rating))
                             .font(.subheadline)
                     }
 
@@ -103,7 +103,7 @@ struct DetailView: View {
 }
 
 #Preview {
-    DetailView(article: Article(
+    DetailView(ratedArticle: RatedArticle(article:  Article(
         id: 1,
         picture: .init(url: "https://example.com", description: "Image"),
         name: "Jean slim",
@@ -111,5 +111,5 @@ struct DetailView: View {
         likes: 20,
         price: 49.0,
         original_price: 65.0
-    ))
+    ), rating: 1.2))
 }
