@@ -8,10 +8,16 @@
 
 import Foundation
 
-struct RatedArticle: Identifiable {
+class RatedArticle: ObservableObject, Identifiable {
     let article: Article
-    let rating: Double
-    var isFavorite: Bool = false
+    @Published var rating: Double
+    @Published var isFavorite: Bool
 
     var id: Int { article.id }
+
+    init(article: Article, rating: Double, isFavorite: Bool) {
+        self.article = article
+        self.rating = rating
+        self.isFavorite = isFavorite
+    }
 }

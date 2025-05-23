@@ -29,6 +29,7 @@ struct HomeView: View {
                                                 .frame(width: 200)
                                         }
                                         .buttonStyle(.plain)
+                                    
                                     }
                                 }
                                 .padding(.horizontal)
@@ -39,6 +40,9 @@ struct HomeView: View {
                 .padding(.top)
             }
             .navigationTitle("Home")
+            .onAppear {
+                viewModel.loadArticles()
+            }
         }
     }
 }
