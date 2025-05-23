@@ -12,7 +12,13 @@ struct DetailView: View {
     let ratedArticle: RatedArticle
     @State private var userRating: Int = 0
     @State private var userComment: String = ""
+    @State private var isFavorite: Bool
 
+    init(ratedArticle: RatedArticle) {
+        self.ratedArticle = ratedArticle
+        _isFavorite = State(initialValue: ratedArticle.isFavorite)
+    }
+    
     var body: some View {
         let article = ratedArticle.article
         ScrollView {
@@ -32,13 +38,20 @@ struct DetailView: View {
                     .accessibilityLabel(article.picture.description)
 
                     HStack(spacing: 4) {
-                        Image(systemName: "heart")
-                        Text("\(article.likes)")
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
+                            .foregroundColor(isFavorite ? .red : .gray)
+                            .onTapGesture {
+                                isFavorite.toggle()
+                            }
+
+                        Text("\(article.likes + (isFavorite ? 1 : 0))")
+                            .foregroundColor(.gray)
                     }
                     .padding(8)
                     .background(.ultraThinMaterial)
                     .clipShape(Capsule())
                     .padding(12)
+                    
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -80,7 +93,7 @@ struct DetailView: View {
                         HStack(spacing: 4) {
                             ForEach(1...5, id: \.self) { index in
                                 Image(systemName: index <= userRating ? "star.fill" : "star")
-                                    .foregroundColor(.gray)
+                                    .foregroundColor((userRating != 0) ? .orange : .gray)
                                     .onTapGesture {
                                         userRating = index
                                     }
