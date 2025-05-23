@@ -6,9 +6,18 @@
 //
 
 
-struct RatedArticle: Identifiable {
+import Foundation
+
+class RatedArticle: ObservableObject, Identifiable {
     let article: Article
-    let rating: Double
+    @Published var rating: Double
+    @Published var isFavorite: Bool
 
     var id: Int { article.id }
+
+    init(article: Article, rating: Double, isFavorite: Bool) {
+        self.article = article
+        self.rating = rating
+        self.isFavorite = isFavorite
+    }
 }

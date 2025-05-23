@@ -19,10 +19,12 @@ class HomeViewModel: ObservableObject {
         loadArticles()
     }
 
-    private func loadArticles() {
+    func loadArticles() {
         let rawArticles = APIService.loadArticles()
+        UserDataStore.shared.load()
         self.ratedArticles = rawArticles.map {
-            RatedArticle(article: $0, rating: Double.random(in: 1.0...5.0))
+            let state = UserDataStore.shared.state(for: $0.id)
+            return RatedArticle(article: $0, rating: Double(state.rating), isFavorite: state.isFavorite)
         }
     }
 

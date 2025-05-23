@@ -9,10 +9,14 @@ import SwiftUI
 
 
 struct DetailView: View {
-    let ratedArticle: RatedArticle
-    @State private var userRating: Int = 0
+    @ObservedObject var ratedArticle: RatedArticle
     @State private var userComment: String = ""
+    @State private var isFavorite: Bool
 
+    init(ratedArticle: RatedArticle) {
+        self.ratedArticle = ratedArticle
+        _isFavorite = State(initialValue: ratedArticle.isFavorite)
+    }
     var body: some View {
         let article = ratedArticle.article
         ScrollView {
@@ -32,13 +36,21 @@ struct DetailView: View {
                     .accessibilityLabel(article.picture.description)
 
                     HStack(spacing: 4) {
-                        Image(systemName: "heart")
-                        Text("\(article.likes)")
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
+                            .foregroundColor(isFavorite ? .red : .gray)
+                            .onTapGesture {
+                                isFavorite.toggle()
+                                UserDataStore.shared.updateState(for: article.id, isFavorite: isFavorite)
+                            }
+
+                        Text("\(article.likes + (isFavorite ? 1 : 0))")
+                            .foregroundColor(.gray)
                     }
                     .padding(8)
                     .background(.ultraThinMaterial)
                     .clipShape(Capsule())
                     .padding(12)
+                    
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -47,10 +59,10 @@ struct DetailView: View {
                             .font(.headline)
                         Spacer()
                         Image(systemName: "star.fill")
-                            .foregroundColor(.orange)
-                            .font(.subheadline)
-                        Text(String(format: "%.1f", ratedArticle.rating))
-                            .font(.subheadline)
+                               .foregroundColor(.orange)
+                               .font(.subheadline)
+                           Text(String(format: "%.1f", ratedArticle.rating))
+                               .font(.subheadline)
                     }
 
                     HStack(spacing: 8) {
@@ -79,10 +91,11 @@ struct DetailView: View {
 
                         HStack(spacing: 4) {
                             ForEach(1...5, id: \.self) { index in
-                                Image(systemName: index <= userRating ? "star.fill" : "star")
-                                    .foregroundColor(.gray)
+                                Image(systemName: index <= Int(ratedArticle.rating) ? "star.fill" : "star")
+                                    .foregroundColor(.orange)
                                     .onTapGesture {
-                                        userRating = index
+                                        ratedArticle.rating = Double(index)
+                                        UserDataStore.shared.updateState(for: ratedArticle.article.id, rating: index)
                                     }
                             }
                         }
@@ -124,14 +137,14 @@ struct DetailView: View {
     }
 }
 
-#Preview {
-    DetailView(ratedArticle: RatedArticle(article:  Article(
-        id: 1,
-        picture: .init(url: "https://example.com", description: "Image"),
-        name: "Jean slim",
-        category: "BOTTOMS",
-        likes: 20,
-        price: 49.0,
-        original_price: 65.0
-    ), rating: 1.2))
-}
+//#Preview {
+//    DetailView(ratedArticle: RatedArticle(article:  Article(
+//        id: 1,
+//        picture: .init(url: "https://example.com", description: "Image"),
+//        name: "Jean slim",
+//        category: "BOTTOMS",
+//        likes: 20,
+//        price: 49.0,
+//        original_price: 65.0
+//    ), rating: 1.2))
+//}
