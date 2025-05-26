@@ -53,5 +53,7 @@ struct ArticleCardView: View {
                 }
             }
         }
+        .accessibilityElement(children: .ignore) // ignore les sous-vues
+        .accessibilityLabel(Text("\(article.name), \(article.price, specifier: "%.0f") euros, note \(String(format: "%.1f", ratedArticle.rating)) sur 5, \(article.likes) favoris"))
     }
 }

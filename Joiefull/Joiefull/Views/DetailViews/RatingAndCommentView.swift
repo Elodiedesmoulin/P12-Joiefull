@@ -1,0 +1,61 @@
+//
+//  RatingAndCommentView.swift
+//  Joiefull
+//
+//  Created by Elo on 26/05/2025.
+//
+
+
+import SwiftUI
+
+
+struct RatingAndCommentView: View {
+    @ObservedObject var ratedArticle: RatedArticle
+    @Binding var userComment: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "person.crop.circle")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .clipShape(Circle())
+
+                HStack(spacing: 4) {
+                    ForEach(1...5, id: \.self) { index in
+                        Image(systemName: index <= Int(ratedArticle.rating) ? "star.fill" : "star")
+                            .foregroundColor(.orange)
+                            .accessibilityLabel("Donner une note de \(index) étoiles")
+                            .accessibilityAddTraits(.isButton)
+                            .onTapGesture {
+                                ratedArticle.rating = Double(index)
+                                UserDataStore.shared.updateState(for: ratedArticle.article.id, rating: index)
+                            }
+                    }
+                }
+                .font(.headline)
+            }
+
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: $userComment)
+                    .frame(height: 120)
+                    .padding(12)
+                    .background(Color.white)
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                    )
+
+                if userComment.isEmpty {
+                    Text("Partagez ici vos impressions sur cette pièce")
+                        .foregroundColor(.gray)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 20)
+                        .allowsHitTesting(false)
+                }
+            }
+            .accessibilityLabel("Champ de commentaire. Partagez ici vos impressions sur cette pièce.")
+        }
+    }
+}
