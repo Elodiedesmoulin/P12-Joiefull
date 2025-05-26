@@ -26,7 +26,6 @@ struct ArticleInfoView: View {
                 Text(String(format: "%.1f", rating))
                     .font(.subheadline)
                     .fontWeight(.semibold)
-
             }
 
             HStack(spacing: 8) {
@@ -36,6 +35,8 @@ struct ArticleInfoView: View {
 
                 if article.original_price > article.price {
                     Text("\(article.original_price, specifier: "%.0f")€")
+                        .font(.subheadline)
+                        .fontWeight(.light)
                         .strikethrough()
                         .foregroundColor(.gray)
                 }
@@ -47,3 +48,4 @@ struct ArticleInfoView: View {
         }
     }
 }
+

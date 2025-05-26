@@ -12,7 +12,6 @@ class RatedArticle: ObservableObject, Identifiable {
     let article: Article
     @Published var rating: Double
     @Published var isFavorite: Bool
-
     var id: Int { article.id }
 
     init(article: Article, rating: Double, isFavorite: Bool) {

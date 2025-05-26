@@ -1,20 +1,20 @@
 //
-//  UserArticleState.swift
+//  UserDataStore.swift
 //  Joiefull
 //
-//  Created by Elo on 23/05/2025.
+//  Created by Elo on 26/05/2025.
 //
 
 
 import Foundation
 
+
 final class UserDataStore {
     static let shared = UserDataStore()
     private let key = "userArticleStates"
+    private var states: [Int: UserArticleState] = [:]
 
     private init() {}
-
-    private var states: [Int: UserArticleState] = [:]
 
     func load() {
         if let data = UserDefaults.standard.data(forKey: key),

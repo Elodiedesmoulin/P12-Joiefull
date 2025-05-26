@@ -15,7 +15,7 @@ struct HomeView: View {
         NavigationView {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 32) {
-                    ForEach(viewModel.groupedArticles.keys.sorted(), id: \.self) { category in
+                    ForEach(viewModel.groupedArticles.keys.sorted(), id: \ .self) { category in
                         VStack(alignment: .leading) {
                             Text(viewModel.localizedCategory(category))
                                 .font(.title2.bold())
@@ -29,7 +29,6 @@ struct HomeView: View {
                                                 .frame(width: 200)
                                         }
                                         .buttonStyle(.plain)
-                                    
                                     }
                                 }
                                 .padding(.horizontal)

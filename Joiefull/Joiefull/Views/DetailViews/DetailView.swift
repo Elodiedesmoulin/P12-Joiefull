@@ -29,8 +29,8 @@ struct DetailView: View {
 
                 ArticleInfoView(article: ratedArticle.article, rating: ratedArticle.rating)
 
-                RatingAndCommentView(ratedArticle: ratedArticle, userComment: $userComment)
-                
+                RatingAndCommentView(ratedArticle: ratedArticle, userComment: $userComment, viewModel: viewModel)
+
                 Spacer()
             }
             .padding()
@@ -39,15 +39,3 @@ struct DetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-
-//#Preview {
-//    DetailView(ratedArticle: RatedArticle(article:  Article(
-//        id: 1,
-//        picture: .init(url: "https://example.com", description: "Image"),
-//        name: "Jean slim",
-//        category: "BOTTOMS",
-//        likes: 20,
-//        price: 49.0,
-//        original_price: 65.0
-//    ), rating: 1.2))
-//}

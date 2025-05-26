@@ -32,7 +32,6 @@ struct HeaderImageView: View {
                 Image(systemName: "square.and.arrow.up.circle.fill")
                     .font(.title)
                     .foregroundStyle(Color.gray)
-                    .font(.title)
             }
             .padding(.top, 9)
             .padding(.trailing, 9)
@@ -60,3 +59,4 @@ struct HeaderImageView: View {
         }
     }
 }
+

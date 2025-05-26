@@ -12,6 +12,7 @@ import SwiftUI
 struct RatingAndCommentView: View {
     @ObservedObject var ratedArticle: RatedArticle
     @Binding var userComment: String
+    let viewModel: DetailViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -22,14 +23,14 @@ struct RatingAndCommentView: View {
                     .clipShape(Circle())
 
                 HStack(spacing: 4) {
-                    ForEach(1...5, id: \.self) { index in
+                    ForEach(1...5, id: \ .self) { index in
                         Image(systemName: index <= Int(ratedArticle.rating) ? "star.fill" : "star")
-                            .foregroundColor(.orange)
+                            .foregroundColor(index <= Int(ratedArticle.rating) ? .orange : .gray)
                             .accessibilityLabel("Donner une note de \(index) étoiles")
                             .accessibilityAddTraits(.isButton)
                             .onTapGesture {
                                 ratedArticle.rating = Double(index)
-                                UserDataStore.shared.updateState(for: ratedArticle.article.id, rating: index)
+                                viewModel.updateNote(id: ratedArticle.article.id, rating: index, favorite: ratedArticle.isFavorite)
                             }
                     }
                 }

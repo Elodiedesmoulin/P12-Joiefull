@@ -10,9 +10,15 @@ import SwiftUI
 
 class DetailViewModel: ObservableObject {
     let article: Article
+    private let repository: ArticleRepositoryProtocol
 
-    init(article: Article) {
+    init(article: Article, repository: ArticleRepositoryProtocol = ArticleRepository()) {
         self.article = article
+        self.repository = repository
+    }
+
+    func updateNote(id: Int, rating: Int, favorite: Bool) {
+        repository.updateNote(for: id, rating: rating, comment: nil, favorite: favorite)
     }
 
     func shareArticle() {
