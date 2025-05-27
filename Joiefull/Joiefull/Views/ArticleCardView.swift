@@ -13,7 +13,7 @@ struct ArticleCardView: View {
 
     var body: some View {
         let article = ratedArticle.article
-        
+
         VStack(alignment: .leading, spacing: 8) {
             AsyncImage(url: URL(string: article.picture.url)) { image in
                 image
@@ -25,7 +25,7 @@ struct ArticleCardView: View {
             .frame(height: 180)
             .clipped()
             .cornerRadius(12)
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text(article.name)
@@ -38,20 +38,23 @@ struct ArticleCardView: View {
                     Text(String(format: "%.1f", ratedArticle.rating))
                         .font(.subheadline)
                 }
-                
+
                 HStack(spacing: 8) {
                     Text("\(article.price, specifier: "%.0f")€")
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                    
+
                     if article.original_price > article.price {
                         Text("\(article.original_price, specifier: "%.0f")€")
                             .font(.subheadline)
+                            .fontWeight(.light)
                             .foregroundColor(.gray)
                             .strikethrough()
                     }
                 }
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("\(article.name), \(article.price, specifier: "%.0f") euros, note \(String(format: "%.1f", ratedArticle.rating)) sur 5, \(article.likes) favoris"))
     }
 }

@@ -8,33 +8,40 @@
 
 import Foundation
 
+@MainActor
 class HomeViewModel: ObservableObject {
     @Published var ratedArticles: [RatedArticle] = []
+    private let repository: ArticleRepositoryProtocol
 
+    init(repository: ArticleRepositoryProtocol = ArticleRepository()) {
+        self.repository = repository
+    }
+
+    func loadArticles() {
+        Task {
+            let result = await repository.fetchArticles()
+            switch result {
+            case .success(let articles):
+                self.ratedArticles = articles
+            case .failure:
+                break
+            }
+        }
+    }
+}
+
+extension HomeViewModel {
     var groupedArticles: [String: [RatedArticle]] {
         Dictionary(grouping: ratedArticles, by: { $0.article.category })
     }
 
-    init() {
-        loadArticles()
-    }
-
-    func loadArticles() {
-        let rawArticles = APIService.loadArticles()
-        UserDataStore.shared.load()
-        self.ratedArticles = rawArticles.map {
-            let state = UserDataStore.shared.state(for: $0.id)
-            return RatedArticle(article: $0, rating: Double(state.rating), isFavorite: state.isFavorite)
-        }
-    }
-
-    func localizedCategory(_ category: String) -> String {
-        switch category.uppercased() {
-        case "TOPS": return "Hauts"
+    func localizedCategory(_ key: String) -> String {
+        switch key {
+        case "ACCESSORIES": return "Accessoires"
         case "BOTTOMS": return "Bas"
-        case "ACCESSORIES": return "Sacs"
         case "SHOES": return "Chaussures"
-        default: return category.capitalized
+        case "TOPS": return "Hauts"
+        default: return key
         }
     }
 }

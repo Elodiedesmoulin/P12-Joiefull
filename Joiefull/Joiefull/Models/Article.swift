@@ -8,12 +8,12 @@
 
 import Foundation
 
-struct Article: Identifiable, Codable {
+struct Article: Codable, Identifiable {
     let id: Int
-    let picture: Picture
     let name: String
     let category: String
     let likes: Int
     let price: Double
     let original_price: Double
+    let picture: Picture
 }
