@@ -37,7 +37,7 @@ class ArticleRepository: ArticleRepositoryProtocol {
     }
 
     func updateNote(for id: Int, rating: Int, comment: String?, favorite: Bool) {
-        localStorage.updateState(for: id, isFavorite: favorite, rating: rating)
+        localStorage.updateState(for: id, isFavorite: favorite, rating: rating, comment: comment)
     }
 
     func getNote(for id: Int) -> UserArticleState {

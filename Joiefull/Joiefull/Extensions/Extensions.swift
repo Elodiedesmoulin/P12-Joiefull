@@ -14,3 +14,10 @@ extension View {
                                         to: nil, from: nil, for: nil)
     }
 }
+
+extension UIDevice {
+    static var isPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
+}
+

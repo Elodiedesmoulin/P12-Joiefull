@@ -8,7 +8,12 @@
 
 import Foundation
 
-class RatedArticle: ObservableObject, Identifiable {
+class RatedArticle: ObservableObject, Identifiable, Equatable {
+    
+    static func == (lhs: RatedArticle, rhs: RatedArticle) -> Bool {
+        lhs.article.id == rhs.article.id
+    }
+    
     let article: Article
     @Published var rating: Double
     @Published var isFavorite: Bool
@@ -20,3 +25,4 @@ class RatedArticle: ObservableObject, Identifiable {
         self.isFavorite = isFavorite
     }
 }
+

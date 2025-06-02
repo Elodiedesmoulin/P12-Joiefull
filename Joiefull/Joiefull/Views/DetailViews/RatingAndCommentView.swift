@@ -11,8 +11,7 @@ import SwiftUI
 
 struct RatingAndCommentView: View {
     @ObservedObject var ratedArticle: RatedArticle
-    @Binding var userComment: String
-    let viewModel: DetailViewModel
+    @ObservedObject var viewModel: DetailViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -23,7 +22,7 @@ struct RatingAndCommentView: View {
                     .clipShape(Circle())
 
                 HStack(spacing: 4) {
-                    ForEach(1...5, id: \ .self) { index in
+                    ForEach(1...5, id: \.self) { index in
                         Image(systemName: index <= Int(ratedArticle.rating) ? "star.fill" : "star")
                             .foregroundColor(index <= Int(ratedArticle.rating) ? .orange : .gray)
                             .accessibilityLabel("Donner une note de \(index) étoiles")
@@ -38,7 +37,7 @@ struct RatingAndCommentView: View {
             }
 
             ZStack(alignment: .topLeading) {
-                TextEditor(text: $userComment)
+                TextEditor(text: $viewModel.userComment)
                     .frame(height: 120)
                     .padding(12)
                     .background(Color.white)
@@ -48,7 +47,7 @@ struct RatingAndCommentView: View {
                             .stroke(Color.gray.opacity(0.4), lineWidth: 1)
                     )
 
-                if userComment.isEmpty {
+                if viewModel.userComment.isEmpty {
                     Text("Partagez ici vos impressions sur cette pièce")
                         .foregroundColor(.gray)
                         .padding(.horizontal, 18)

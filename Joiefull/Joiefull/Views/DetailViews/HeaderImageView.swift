@@ -23,7 +23,7 @@ struct HeaderImageView: View {
             } placeholder: {
                 Color.gray.opacity(0.3)
             }
-            .frame(height: 350)
+            .frame(height: 400)
             .clipped()
             .cornerRadius(12)
             .accessibilityLabel(article.picture.description)

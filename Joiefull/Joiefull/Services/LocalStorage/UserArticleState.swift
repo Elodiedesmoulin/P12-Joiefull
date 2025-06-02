@@ -11,4 +11,5 @@ import Foundation
 struct UserArticleState: Codable {
     var isFavorite: Bool
     var rating: Int
+    var comment: String
 }
