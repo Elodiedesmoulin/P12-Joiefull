@@ -9,7 +9,7 @@
 import Foundation
 
 
-final class UserDataStore {
+final class UserDataStore: UserDataStoreProtocol {
     static let shared = UserDataStore()
 
     private let key = "userArticleStates"

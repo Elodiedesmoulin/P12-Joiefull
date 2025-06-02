@@ -20,9 +20,10 @@ struct RatingAndCommentView: View {
                     .resizable()
                     .frame(width: 24, height: 24)
                     .clipShape(Circle())
+                    .accessibilityHidden(true)
 
                 HStack(spacing: 4) {
-                    ForEach(1...5, id: \.self) { index in
+                    ForEach(1...5, id: \ .self) { index in
                         Image(systemName: index <= Int(ratedArticle.rating) ? "star.fill" : "star")
                             .foregroundColor(index <= Int(ratedArticle.rating) ? .orange : .gray)
                             .accessibilityLabel("Donner une note de \(index) étoiles")
@@ -46,6 +47,7 @@ struct RatingAndCommentView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.4), lineWidth: 1)
                     )
+                    .accessibilityLabel("Champ de commentaire. Partagez ici vos impressions sur cette pièce.")
 
                 if viewModel.userComment.isEmpty {
                     Text("Partagez ici vos impressions sur cette pièce")
@@ -55,7 +57,6 @@ struct RatingAndCommentView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .accessibilityLabel("Champ de commentaire. Partagez ici vos impressions sur cette pièce.")
         }
     }
 }

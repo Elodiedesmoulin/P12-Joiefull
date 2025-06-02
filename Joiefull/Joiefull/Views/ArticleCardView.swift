@@ -18,14 +18,15 @@ struct ArticleCardView: View {
             AsyncImage(url: URL(string: article.picture.url)) { image in
                 image
                     .resizable()
-                    .aspectRatio(4/5, contentMode: .fill)
+                    .aspectRatio(3/4, contentMode: .fill)
             } placeholder: {
                 Color.gray.opacity(0.3)
             }
-            .frame(height: 250)
-            .frame(width: 210)
+            .frame(height: UIDevice.isPad ? 200 : 250)
+            .frame(width: UIDevice.isPad ? 400 : 210)
             .clipped()
             .cornerRadius(12)
+            .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
