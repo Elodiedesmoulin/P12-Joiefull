@@ -23,7 +23,7 @@ struct HeaderImageView: View {
             } placeholder: {
                 Color.gray.opacity(0.3)
             }
-            .frame(height: 350)
+            .frame(height: 400)
             .clipped()
             .cornerRadius(12)
             .accessibilityLabel(article.picture.description)
@@ -35,6 +35,7 @@ struct HeaderImageView: View {
             }
             .padding(.top, 9)
             .padding(.trailing, 9)
+            .accessibilityLabel("Partager l’article")
 
             VStack {
                 Spacer()
@@ -47,6 +48,7 @@ struct HeaderImageView: View {
                                 isFavorite.toggle()
                                 UserDataStore.shared.updateState(for: article.id, isFavorite: isFavorite)
                             }
+                            .accessibilityLabel(isFavorite ? "Retirer des favoris" : "Ajouter aux favoris")
                         Text("\(article.likes + (isFavorite ? 1 : 0))")
                             .foregroundColor(.black)
                     }
@@ -59,4 +61,5 @@ struct HeaderImageView: View {
         }
     }
 }
+
 

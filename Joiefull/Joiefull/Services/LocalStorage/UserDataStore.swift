@@ -9,12 +9,15 @@
 import Foundation
 
 
-final class UserDataStore {
+final class UserDataStore: UserDataStoreProtocol {
     static let shared = UserDataStore()
+
     private let key = "userArticleStates"
     private var states: [Int: UserArticleState] = [:]
 
-    private init() {}
+    private init() {
+        load()
+    }
 
     func load() {
         if let data = UserDefaults.standard.data(forKey: key),
@@ -30,13 +33,20 @@ final class UserDataStore {
     }
 
     func state(for articleID: Int) -> UserArticleState {
-        states[articleID] ?? UserArticleState(isFavorite: false, rating: 0)
+        states[articleID] ?? UserArticleState(isFavorite: false, rating: 0, comment: "")
     }
 
-    func updateState(for articleID: Int, isFavorite: Bool? = nil, rating: Int? = nil) {
-        var current = states[articleID] ?? UserArticleState(isFavorite: false, rating: 0)
-        if let isFavorite = isFavorite { current.isFavorite = isFavorite }
-        if let rating = rating { current.rating = rating }
+    func updateState(for articleID: Int, isFavorite: Bool? = nil, rating: Int? = nil, comment: String? = nil) {
+        var current = state(for: articleID)
+        if let isFavorite = isFavorite {
+            current.isFavorite = isFavorite
+        }
+        if let rating = rating {
+            current.rating = rating
+        }
+        if let comment = comment {
+            current.comment = comment
+        }
         states[articleID] = current
         save()
     }

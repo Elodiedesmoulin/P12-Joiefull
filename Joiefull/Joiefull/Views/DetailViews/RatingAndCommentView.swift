@@ -11,8 +11,7 @@ import SwiftUI
 
 struct RatingAndCommentView: View {
     @ObservedObject var ratedArticle: RatedArticle
-    @Binding var userComment: String
-    let viewModel: DetailViewModel
+    @ObservedObject var viewModel: DetailViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -21,6 +20,7 @@ struct RatingAndCommentView: View {
                     .resizable()
                     .frame(width: 24, height: 24)
                     .clipShape(Circle())
+                    .accessibilityHidden(true)
 
                 HStack(spacing: 4) {
                     ForEach(1...5, id: \ .self) { index in
@@ -38,7 +38,7 @@ struct RatingAndCommentView: View {
             }
 
             ZStack(alignment: .topLeading) {
-                TextEditor(text: $userComment)
+                TextEditor(text: $viewModel.userComment)
                     .frame(height: 120)
                     .padding(12)
                     .background(Color.white)
@@ -47,8 +47,9 @@ struct RatingAndCommentView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.4), lineWidth: 1)
                     )
+                    .accessibilityLabel("Champ de commentaire. Partagez ici vos impressions sur cette pièce.")
 
-                if userComment.isEmpty {
+                if viewModel.userComment.isEmpty {
                     Text("Partagez ici vos impressions sur cette pièce")
                         .foregroundColor(.gray)
                         .padding(.horizontal, 18)
@@ -56,7 +57,6 @@ struct RatingAndCommentView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .accessibilityLabel("Champ de commentaire. Partagez ici vos impressions sur cette pièce.")
         }
     }
 }

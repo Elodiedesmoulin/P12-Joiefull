@@ -11,10 +11,9 @@ import SwiftUI
 struct DetailView: View {
     @ObservedObject var ratedArticle: RatedArticle
     @StateObject private var viewModel: DetailViewModel
-    @State private var userComment: String = ""
     @State private var isFavorite: Bool
 
-    init(ratedArticle: RatedArticle) {
+    init(ratedArticle: RatedArticle, refreshID: UUID) {
         self.ratedArticle = ratedArticle
         _viewModel = StateObject(wrappedValue: DetailViewModel(article: ratedArticle.article))
         _isFavorite = State(initialValue: ratedArticle.isFavorite)
@@ -29,7 +28,7 @@ struct DetailView: View {
 
                 ArticleInfoView(article: ratedArticle.article, rating: ratedArticle.rating)
 
-                RatingAndCommentView(ratedArticle: ratedArticle, userComment: $userComment, viewModel: viewModel)
+                RatingAndCommentView(ratedArticle: ratedArticle, viewModel: viewModel)
 
                 Spacer()
             }
@@ -37,5 +36,8 @@ struct DetailView: View {
         }
         .onTapGesture { hideKeyboard() }
         .navigationBarTitleDisplayMode(.inline)
+        .onDisappear {
+            viewModel.updateComment()
+        }
     }
 }
