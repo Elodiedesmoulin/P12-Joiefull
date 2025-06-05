@@ -8,11 +8,12 @@
 import SwiftUI
 
 @main
-struct JoiefullApp: App {
-    
+struct P12_JoiefullApp: App {
+    @StateObject var articleListViewModel = ArticleListViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .environmentObject(articleListViewModel)
         }
     }
 }
