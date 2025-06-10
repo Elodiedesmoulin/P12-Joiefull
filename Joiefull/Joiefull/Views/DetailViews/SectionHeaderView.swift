@@ -12,9 +12,10 @@ struct SectionHeaderView: View {
     let title: String
     var body: some View {
         Text(title)
-            .font(.system(size: 28, weight: .bold))
+            .font(.system(size: 28, weight: .bold, design: .default))
+            .foregroundColor(.primary)
             .padding(.horizontal, 16)
-            .padding(.bottom, 2)
+            .padding(.bottom, 4)
     }
 }
 

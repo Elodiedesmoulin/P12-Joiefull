@@ -11,9 +11,12 @@ import Combine
 
 final class ArticleListViewModel: ObservableObject {
     @Published var articles: [Article] = []
-    @Published var favorites: Set<Int> = []
-    @Published var ratings: [Int: Int] = [:]
-    @Published var comments: [Int: String] = [:]
+    @Published var userStates: [Int: UserArticleState] = [:]
+    private let userStatesStore = UserDefaultsUserStatesStore()
+
+    init() {
+        self.userStates = userStatesStore.load()
+    }
 
     // MARK: - Chargement
     func loadArticles() async {
@@ -26,21 +29,43 @@ final class ArticleListViewModel: ObservableObject {
             print("Erreur lors du chargement des articles :", error)
         }
     }
-    
-    // MARK: - Métier
-    func isFavorite(_ article: Article) -> Bool { favorites.contains(article.id) }
+
+    // MARK: - Métier / Persistance
+    func isFavorite(_ article: Article) -> Bool {
+        userStates[article.id]?.isFavorite ?? false
+    }
     func toggleFavorite(for article: Article) {
-        if favorites.contains(article.id) {
-            favorites.remove(article.id)
-        } else {
-            favorites.insert(article.id)
+        var state = userStates[article.id] ?? UserArticleState()
+        state.isFavorite.toggle()
+        userStates[article.id] = state
+        userStatesStore.save(states: userStates)
+        if let idx = articles.firstIndex(where: { $0.id == article.id }) {
+            if state.isFavorite {
+                articles[idx].likes += 1
+            } else {
+                articles[idx].likes = max(0, articles[idx].likes - 1)
+            }
         }
     }
-    func userRating(for article: Article) -> Int? { ratings[article.id] }
-    func setRating(for article: Article, rating: Int) { ratings[article.id] = rating }
-    func userComment(for article: Article) -> String? { comments[article.id] }
-    func setComment(for article: Article, comment: String) { comments[article.id] = comment }
-    
+    func userRating(for article: Article) -> Int {
+        userStates[article.id]?.userRating ?? 0
+    }
+    func setRating(for article: Article, rating: Int) {
+        var state = userStates[article.id] ?? UserArticleState()
+        state.userRating = rating
+        userStates[article.id] = state
+        userStatesStore.save(states: userStates)
+    }
+    func userComment(for article: Article) -> String {
+        userStates[article.id]?.userComment ?? ""
+    }
+    func setComment(for article: Article, comment: String) {
+        var state = userStates[article.id] ?? UserArticleState()
+        state.userComment = comment
+        userStates[article.id] = state
+        userStatesStore.save(states: userStates)
+    }
+
     func categoriesSorted() -> [String] {
         let cats = articles.map { $0.category }
         return Array(Set(cats)).sorted { label(for: $0) < label(for: $1) }

@@ -13,9 +13,7 @@ final class ArticleRepository: ArticleRepositoryProtocol {
     private let apiService: APIServiceProtocol = APIService.shared
 
     func fetchArticles() async throws -> [Article] {
-        // Pour le local :
         return try await apiService.fetchLocal(endpoint: "clothes")
         
-
     }
 }

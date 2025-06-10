@@ -24,7 +24,7 @@ struct ArticleSectionView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                     }
-                }.padding(.horizontal, 16)
+                }.padding(.horizontal, 6)
             }
         }
     }
