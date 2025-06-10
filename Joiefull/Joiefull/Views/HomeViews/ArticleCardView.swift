@@ -11,6 +11,8 @@ import SwiftUI
 struct ArticleCardView: View {
     @EnvironmentObject var viewModel: ArticleListViewModel
     let article: Article
+    var isSelected: Bool = false
+
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -37,6 +39,8 @@ struct ArticleCardView: View {
         }
         .padding(6)
         .frame(width: 180, alignment: .leading)
+        .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(article.name), \(article.ratingString) étoiles, \(Int(article.price)) euros")
     }
 }
 
