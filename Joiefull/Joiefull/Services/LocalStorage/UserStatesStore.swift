@@ -1,5 +1,5 @@
 //
-//  UserDefaultsUserStatesStore.swift
+//  UserStatesStore.swift
 //  Joiefull
 //
 //  Created by Elo on 26/05/2025.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class UserDefaultsUserStatesStore: UserStatesStoreProtocol {
+final class UserStatesStore: UserStatesStoreProtocol {
     private let userStatesKey = "UserArticleStates"
 
     func save(states: [Int: UserArticleState]) {

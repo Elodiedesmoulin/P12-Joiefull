@@ -16,7 +16,7 @@ struct ArticleImageWithLikesView: View {
     var width: CGFloat = 180
     var height: CGFloat = 180
     var cornerRadius: CGFloat = 24
-    
+
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             AsyncImage(url: URL(string: imageUrl)) { image in
@@ -29,6 +29,8 @@ struct ArticleImageWithLikesView: View {
                     .frame(width: width, height: height)
                     .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
             }
+            .accessibilityHidden(true)
+
             Button(action: onToggleFavorite) {
                 HStack(spacing: 4) {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
@@ -45,6 +47,9 @@ struct ArticleImageWithLikesView: View {
             }
             .padding(.vertical, 8)
             .padding(.horizontal, 10)
+            .accessibilityLabel(isFavorite ? "Retirer des favoris" : "Ajouter aux favoris")
+            .accessibilityHint("\(likes) personnes aiment cet article.")
+            .accessibilityValue(isFavorite ? "Dans favoris" : "Non favori")
         }
     }
 }

@@ -11,9 +11,6 @@ import Foundation
 final class APIService: APIServiceProtocol {
     static let shared = APIService()
     
-//    private let baseURL = "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/Cr-ez-une-interface-dynamique-et-accessible-avec-SwiftUI/main/"
-    
-    
     func fetchLocal<T: Decodable>(endpoint: String) throws -> T {
         guard let url = Bundle.main.url(forResource: endpoint, withExtension: "json") else {
             throw RepositoryError.invalidURL
@@ -25,6 +22,12 @@ final class APIService: APIServiceProtocol {
     }
     
     
+    
+    
+    
+    
+//    private let baseURL = "https://raw.githubusercontent.com/OpenClassrooms-Student-Center/Cr-ez-une-interface-dynamique-et-accessible-avec-SwiftUI/main/"
+
 //    func fetch<T: Decodable>(endpoint: String) async throws -> T {
 //        guard let url = URL(string: baseURL + endpoint) else {
 //            throw RepositoryError.invalidURL

@@ -10,9 +10,10 @@ import SwiftUI
 
 struct DetailView: View {
     let article: Article
+    var maxWidth: CGFloat? = nil
     @EnvironmentObject var viewModel: ArticleListViewModel
     @State private var showShareSheet = false
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
@@ -23,13 +24,13 @@ struct DetailView: View {
                         likes: article.likes,
                         isFavorite: viewModel.isFavorite(article),
                         onToggleFavorite: { viewModel.toggleFavorite(for: article) },
-                        width: UIScreen.main.bounds.width - 30,
+                        width: (maxWidth ?? UIScreen.main.bounds.width) - 30,
                         height: 400
                     )
                     Spacer()
                 }
                 .padding(.top, 12)
-
+                
                 VStack(alignment: .leading, spacing: 12) {
                     ArticleTitleRatingView(
                         name: article.name,
@@ -41,15 +42,20 @@ struct DetailView: View {
                         originalPrice: article.originalPrice
                     )
                     .font(.title2)
+                    
+                    
                     Text(article.picture.description)
                         .font(.body)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+                    
+                    
                     HStack {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable()
                             .frame(width: 36, height: 36)
                             .foregroundColor(.gray)
+                            .accessibilityHidden(true)
                         StarRatingView(
                             rating: Binding(
                                 get: { viewModel.userRating(for: article)},
@@ -70,18 +76,23 @@ struct DetailView: View {
                         .background(Color(.secondarySystemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                         .font(.body)
+                        .accessibilityLabel("Votre avis sur cette pièce")
+                        .accessibilityHint("Saisissez un commentaire")
                         if (viewModel.userComment(for: article)).isEmpty {
                             Text("Partagez ici vos impressions sur cette pièce")
                                 .foregroundColor(.gray)
                                 .padding(.horizontal, 14)
                                 .padding(.vertical, 14)
+                                .accessibilityHidden(true)
                         }
                     }
                     .padding(.bottom, 24)
                 }
-                .padding(.horizontal, 26)
+                .frame(maxWidth: maxWidth ?? .infinity)
+                .navigationBarTitleDisplayMode(.inline)
+                .accessibilityElement(children: .contain)
+                .accessibilityLabel("Détail de l'article \(article.name)")
             }
-            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

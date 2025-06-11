@@ -10,10 +10,10 @@ import SwiftUI
 @main
 struct JoiefullApp: App {
     @StateObject var articleListViewModel = ArticleListViewModel()
-        var body: some Scene {
-            WindowGroup {
-                AppMainView()
-                    .environmentObject(articleListViewModel)
-            }
+    var body: some Scene {
+        WindowGroup {
+            AppMainView()
+                .environmentObject(articleListViewModel)
         }
     }
+}

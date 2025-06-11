@@ -12,13 +12,14 @@ import Combine
 final class ArticleListViewModel: ObservableObject {
     @Published var articles: [Article] = []
     @Published var userStates: [Int: UserArticleState] = [:]
-    private let userStatesStore = UserDefaultsUserStatesStore()
+    private let userStatesStore = UserStatesStore()
 
     init() {
         self.userStates = userStatesStore.load()
     }
 
-    // MARK: - Chargement
+    // MARK: - Loading
+    
     func loadArticles() async {
         do {
             let articles: [Article] = try APIService.shared.fetchLocal(endpoint: "clothes")
@@ -26,11 +27,12 @@ final class ArticleListViewModel: ObservableObject {
                 self.articles = articles
             }
         } catch {
-            print("Erreur lors du chargement des articles :", error)
+            print("Error loading articles :", error)
         }
     }
 
-    // MARK: - Métier / Persistance
+    // MARK: - Persistance
+    
     func isFavorite(_ article: Article) -> Bool {
         userStates[article.id]?.isFavorite ?? false
     }

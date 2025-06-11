@@ -9,19 +9,21 @@ import SwiftUI
 
 struct AppMainView: View {
     @EnvironmentObject var viewModel: ArticleListViewModel
-        @State private var selectedArticle: Article? = nil
+    @State private var selectedArticle: Article? = nil
 
     var body: some View {
-           Group {
-               if UIDevice.current.userInterfaceIdiom == .pad {
-                   HomeiPadView(selectedArticle: $selectedArticle)
-               } else {
-                   NavigationView {
-                       HomeView { article in
-                           selectedArticle = article
-                       }
-                   }
-               }
-           }
-       }
-   }
+        Group {
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                if selectedArticle != nil {
+                    iPadSplitView(selectedArticle: $selectedArticle)
+                } else {
+                    HomeiPadView(selectedArticle: $selectedArticle)
+                }
+            } else {
+                HomeView()
+            }
+        }
+        .environmentObject(viewModel)
+        .onAppear { Task { await viewModel.loadArticles() } }
+    }
+}

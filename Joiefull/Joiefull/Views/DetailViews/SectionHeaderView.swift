@@ -16,6 +16,7 @@ struct SectionHeaderView: View {
             .foregroundColor(.primary)
             .padding(.horizontal, 16)
             .padding(.bottom, 4)
+            .accessibilityAddTraits(.isHeader)
     }
 }
 

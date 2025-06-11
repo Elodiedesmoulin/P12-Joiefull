@@ -18,12 +18,15 @@ struct StarRatingView: View {
                     .resizable()
                     .frame(width: 28, height: 28)
                     .foregroundColor(.orange)
-                    .onTapGesture {
-                        rating = idx
-                    }
+                    .onTapGesture { rating = idx }
+                    .accessibilityElement()
+                    .accessibilityLabel("\(idx) étoile\(idx > 1 ? "s" : "")")
+                    .accessibilityAddTraits(rating == idx ? [.isSelected, .isButton] : .isButton)
+                    .accessibilityHint("Attribuer une note de \(idx) sur 5 à cet article.")
             }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Notez cette pièce de 1 à 5 étoiles")
     }
 }
-
 

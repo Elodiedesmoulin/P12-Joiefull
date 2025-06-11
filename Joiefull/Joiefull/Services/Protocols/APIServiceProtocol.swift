@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 protocol APIServiceProtocol {
     func fetchLocal<T: Decodable>(endpoint: String) async throws -> T
 }
