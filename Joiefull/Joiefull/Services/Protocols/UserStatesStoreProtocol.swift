@@ -11,5 +11,4 @@ import Foundation
 protocol UserStatesStoreProtocol {
     func save(states: [Int: UserArticleState])
     func load() -> [Int: UserArticleState]
-    func clear()
 }

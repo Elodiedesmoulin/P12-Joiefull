@@ -10,6 +10,8 @@ import SwiftUI
 struct AppMainView: View {
     @EnvironmentObject var viewModel: ArticleListViewModel
     @State private var selectedArticle: Article? = nil
+    @State private var showAlert = false
+
 
     var body: some View {
         Group {
@@ -25,5 +27,15 @@ struct AppMainView: View {
         }
         .environmentObject(viewModel)
         .onAppear { Task { await viewModel.loadArticles() } }
+    
+    .onReceive(viewModel.$errorMessage) { msg in
+        if msg != nil { showAlert = true }
     }
+    .alert("Erreur", isPresented: $showAlert, actions: {
+        Button("OK") { viewModel.errorMessage = nil }
+    }, message: {
+        Text(viewModel.errorMessage ?? "Une erreur inconnue est survenue.")
+    })
 }
+}
+    

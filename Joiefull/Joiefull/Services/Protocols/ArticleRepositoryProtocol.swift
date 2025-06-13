@@ -7,7 +7,9 @@
 
 
 import Foundation
+import Combine
 
 protocol ArticleRepositoryProtocol {
     func fetchArticles() async throws -> [Article]
+    func fetchArticlesPublisher() -> AnyPublisher<[Article], RepositoryError>
 }

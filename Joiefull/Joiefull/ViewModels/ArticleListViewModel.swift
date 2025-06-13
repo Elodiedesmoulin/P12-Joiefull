@@ -12,30 +12,50 @@ import Combine
 final class ArticleListViewModel: ObservableObject {
     @Published var articles: [Article] = []
     @Published var userStates: [Int: UserArticleState] = [:]
-    private let userStatesStore = UserStatesStore()
-
+    @Published var errorMessage: String? = nil
+    
+    private let userStatesStore: UserStatesStoreProtocol
+    private let articleRepository: ArticleRepositoryProtocol
+    
+    // Prod init
     init() {
+        self.userStatesStore = UserStatesStore()
+        self.articleRepository = ArticleRepository.shared
         self.userStates = userStatesStore.load()
     }
-
+    // Test init
+    init(userStatesStore: UserStatesStoreProtocol, articleRepository: ArticleRepositoryProtocol) {
+        self.userStatesStore = userStatesStore
+        self.articleRepository = articleRepository
+        self.userStates = userStatesStore.load()
+    }
+    
     // MARK: - Loading
+    
     
     func loadArticles() async {
         do {
-            let articles: [Article] = try APIService.shared.fetchLocal(endpoint: "clothes")
-            DispatchQueue.main.async {
-                self.articles = articles
+            let allArticles: [Article] = try APIService.shared.fetchLocal(endpoint: "clothes")
+            DispatchQueue.main.async { [weak self] in
+                self?.articles = allArticles
+            }
+        } catch let error as RepositoryError {
+            DispatchQueue.main.async { [weak self] in
+                self?.errorMessage = error.errorDescription
             }
         } catch {
-            print("Error loading articles :", error)
+            DispatchQueue.main.async { [weak self] in
+                self?.errorMessage = error.localizedDescription
+            }
         }
     }
-
+    
     // MARK: - Persistance
     
     func isFavorite(_ article: Article) -> Bool {
         userStates[article.id]?.isFavorite ?? false
     }
+    
     func toggleFavorite(for article: Article) {
         var state = userStates[article.id] ?? UserArticleState()
         state.isFavorite.toggle()
@@ -49,18 +69,22 @@ final class ArticleListViewModel: ObservableObject {
             }
         }
     }
+    
     func userRating(for article: Article) -> Int {
         userStates[article.id]?.userRating ?? 0
     }
+    
     func setRating(for article: Article, rating: Int) {
         var state = userStates[article.id] ?? UserArticleState()
         state.userRating = rating
         userStates[article.id] = state
         userStatesStore.save(states: userStates)
     }
+    
     func userComment(for article: Article) -> String {
         userStates[article.id]?.userComment ?? ""
     }
+    
     func setComment(for article: Article, comment: String) {
         var state = userStates[article.id] ?? UserArticleState()
         state.userComment = comment
@@ -72,6 +96,7 @@ final class ArticleListViewModel: ObservableObject {
         let cats = articles.map { $0.category }
         return Array(Set(cats)).sorted { label(for: $0) < label(for: $1) }
     }
+    
     func label(for category: String) -> String {
         switch category.uppercased() {
         case "TOPS": return "Hauts"

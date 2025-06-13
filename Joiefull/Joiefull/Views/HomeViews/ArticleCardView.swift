@@ -21,6 +21,10 @@ struct ArticleCardView: View {
                 isFavorite: viewModel.isFavorite(article),
                 onToggleFavorite: { viewModel.toggleFavorite(for: article) }
             )
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(isSelected ? Color.cyan : Color.clear, lineWidth: isSelected ? 3 : 0)
+            )
             ArticleTitleRatingView(
                 name: article.name,
                 ratingString: article.ratingString
@@ -32,10 +36,6 @@ struct ArticleCardView: View {
         }
         .padding(6)
         .frame(width: 180, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .stroke(isSelected ? Color.cyan : Color.clear, lineWidth: isSelected ? 3 : 0)
-        )
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(articleAccessibilityLabel)
         .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)

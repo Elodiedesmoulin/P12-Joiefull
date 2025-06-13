@@ -8,25 +8,35 @@
 
 import Foundation
 
+protocol UserDefaultsProtocol {
+    func set(_ value: Any?, forKey defaultName: String)
+    func data(forKey defaultName: String) -> Data?
+}
+
+extension UserDefaults: UserDefaultsProtocol {
+    
+}
+
 final class UserStatesStore: UserStatesStoreProtocol {
     private let userStatesKey = "UserArticleStates"
+    private let userDefaults: UserDefaultsProtocol
 
+    init(userDefaults: UserDefaultsProtocol = UserDefaults.standard) {
+        self.userDefaults = userDefaults
+    }
+    
     func save(states: [Int: UserArticleState]) {
         if let data = try? JSONEncoder().encode(states) {
-            UserDefaults.standard.set(data, forKey: userStatesKey)
+            userDefaults.set(data, forKey: userStatesKey)
         }
     }
 
     func load() -> [Int: UserArticleState] {
-        guard let data = UserDefaults.standard.data(forKey: userStatesKey),
+        guard let data = userDefaults.data(forKey: userStatesKey),
               let savedStates = try? JSONDecoder().decode([Int: UserArticleState].self, from: data) else {
             return [:]
         }
         return savedStates
-    }
-
-    func clear() {
-        UserDefaults.standard.removeObject(forKey: userStatesKey)
     }
 }
 

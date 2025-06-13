@@ -35,7 +35,7 @@ struct iPadSplitView: View {
                 Divider()
                 
                 if let article = selectedArticle {
-                    DetailView(article: article, maxWidth: geo.size.width * 0.4)
+                    DetailView(article: article, maxWidth: geo.size.width * 0.3)
                         .frame(width: geo.size.width * 0.4)
                         .background(Color(.systemBackground))
                         .transition(.move(edge: .trailing))

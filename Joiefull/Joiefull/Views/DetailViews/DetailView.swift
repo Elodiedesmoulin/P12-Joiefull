@@ -56,6 +56,7 @@ struct DetailView: View {
                             .frame(width: 36, height: 36)
                             .foregroundColor(.gray)
                             .accessibilityHidden(true)
+                        
                         StarRatingView(
                             rating: Binding(
                                 get: { viewModel.userRating(for: article)},
@@ -64,6 +65,7 @@ struct DetailView: View {
                         )
                     }
                     .padding(.vertical, 6)
+                    
                     ZStack(alignment: .topLeading) {
                         TextEditor(
                             text: Binding(
