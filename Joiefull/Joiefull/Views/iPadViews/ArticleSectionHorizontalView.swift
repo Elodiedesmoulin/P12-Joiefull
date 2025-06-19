@@ -27,11 +27,13 @@ struct ArticleSectionHorizontalView: View {
                 .padding(.leading, 18)
                 .padding(.bottom, 2)
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20) {
+                HStack(spacing: 60) {
                     ForEach(articles) { article in
                         ArticleCardView(
                             article: article,
-                            isSelected: selectedArticle?.id == article.id
+                            isSelected: selectedArticle?.id == article.id,
+                            width: 230,
+                            height: 250, trailingPadding: -50
                         )
                         .onTapGesture {
                             onSelect(article)

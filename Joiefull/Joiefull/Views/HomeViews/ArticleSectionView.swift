@@ -11,15 +11,18 @@ import SwiftUI
 struct ArticleSectionView: View {
     @EnvironmentObject var viewModel: ArticleListViewModel
     let category: String
+    var width: CGFloat
+    var height: CGFloat
+    var trailingPadding: CGFloat
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 1) {
             SectionHeaderView(title: viewModel.label(for: category))
             ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 16) {
+                LazyHStack(spacing: 20) {
                     ForEach(viewModel.articles.filter { $0.category == category }) { article in
                         NavigationLink(destination: DetailView(article: article)) {
-                            ArticleCardView(article: article)
+                            ArticleCardView(article: article, width: width, height: height,trailingPadding: trailingPadding)
                                 .frame(width: 180)
                         }
                         .buttonStyle(PlainButtonStyle())

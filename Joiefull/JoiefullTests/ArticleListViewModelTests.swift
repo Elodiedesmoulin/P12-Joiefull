@@ -11,14 +11,13 @@ import XCTest
 
 final class ArticleListViewModelTests: XCTestCase {
     var viewModel: ArticleListViewModel!
-    var mockStore: MockUserStatesStore!
+    var mockStore = UserStatesStore(userDefaults: MockUserDefaults())
     var mockRepo: MockArticleRepository!
     var article: Article!
     var article2: Article!
 
     override func setUp() {
         super.setUp()
-        mockStore = MockUserStatesStore()
         mockRepo = MockArticleRepository()
         viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
         article = Article(
@@ -46,7 +45,6 @@ final class ArticleListViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isFavorite(article))
         viewModel.toggleFavorite(for: article)
         XCTAssertTrue(viewModel.isFavorite(article))
-        // Toggle again
         viewModel.toggleFavorite(for: article)
         XCTAssertFalse(viewModel.isFavorite(article))
     }
@@ -63,7 +61,6 @@ final class ArticleListViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.userRating(for: article), 0)
         viewModel.setRating(for: article, rating: 4)
         XCTAssertEqual(viewModel.userRating(for: article), 4)
-        // Test updating again
         viewModel.setRating(for: article, rating: 2)
         XCTAssertEqual(viewModel.userRating(for: article), 2)
     }
@@ -78,19 +75,19 @@ final class ArticleListViewModelTests: XCTestCase {
 
     func testPersistUserStatesOnFavorite() {
         viewModel.toggleFavorite(for: article)
-        let persisted = mockStore.savedStates
+        let persisted = mockStore.load()
         XCTAssertTrue(persisted[article.id]?.isFavorite ?? false)
     }
 
     func testPersistUserStatesOnRating() {
         viewModel.setRating(for: article, rating: 3)
-        let persisted = mockStore.savedStates
+        let persisted = mockStore.load()
         XCTAssertEqual(persisted[article.id]?.userRating, 3)
     }
 
     func testPersistUserStatesOnComment() {
         viewModel.setComment(for: article, comment: "Top")
-        let persisted = mockStore.savedStates
+        let persisted = mockStore.load()
         XCTAssertEqual(persisted[article.id]?.userComment, "Top")
     }
 
@@ -114,7 +111,7 @@ final class ArticleListViewModelTests: XCTestCase {
 
     func testInitWithLoadedStates() {
         let state = UserArticleState(isFavorite: true, userRating: 5, userComment: "Parfait")
-        mockStore.savedStates = [article.id: state]
+        mockStore.save(states: [article.id: state])
         let newVM = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
         XCTAssertEqual(newVM.userRating(for: article), 5)
         XCTAssertEqual(newVM.userComment(for: article), "Parfait")

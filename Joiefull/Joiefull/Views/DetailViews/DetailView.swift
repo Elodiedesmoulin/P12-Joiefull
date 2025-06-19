@@ -24,6 +24,7 @@ struct DetailView: View {
                         likes: article.likes,
                         isFavorite: viewModel.isFavorite(article),
                         onToggleFavorite: { viewModel.toggleFavorite(for: article) },
+                        onShare: { showShareSheet = true },
                         width: (maxWidth ?? UIScreen.main.bounds.width) - 30,
                         height: 400
                     )
@@ -34,7 +35,7 @@ struct DetailView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     ArticleTitleRatingView(
                         name: article.name,
-                        ratingString: article.ratingString
+                        ratingString: article.ratingString, trailingPadding: 5
                     )
                     .font(.title2)
                     ArticlePriceView(
@@ -48,6 +49,7 @@ struct DetailView: View {
                         .font(.body)
                         .foregroundColor(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
+                        .padding(.horizontal, 5)
                     
                     
                     HStack {
@@ -65,6 +67,8 @@ struct DetailView: View {
                         )
                     }
                     .padding(.vertical, 6)
+                    .padding(.horizontal, 5)
+
                     
                     ZStack(alignment: .topLeading) {
                         TextEditor(
@@ -75,8 +79,10 @@ struct DetailView: View {
                         )
                         .frame(minHeight: 120, maxHeight: 130)
                         .padding(8)
-                        .background(Color(.secondarySystemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                            )
                         .font(.body)
                         .accessibilityLabel("Votre avis sur cette pièce")
                         .accessibilityHint("Saisissez un commentaire")
@@ -89,11 +95,19 @@ struct DetailView: View {
                         }
                     }
                     .padding(.bottom, 24)
+                    .padding(.horizontal, 5)
+
                 }
+                .padding([.horizontal, .bottom], 16)
                 .frame(maxWidth: maxWidth ?? .infinity)
                 .navigationBarTitleDisplayMode(.inline)
                 .accessibilityElement(children: .contain)
                 .accessibilityLabel("Détail de l'article \(article.name)")
+                .sheet(isPresented: $showShareSheet) {
+                    if let url = URL(string: article.picture.url) {
+                        ShareSheet(items: [url, article.name])
+                    }
+                }
             }
         }
     }

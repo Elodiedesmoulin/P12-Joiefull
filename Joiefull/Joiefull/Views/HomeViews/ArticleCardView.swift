@@ -12,6 +12,9 @@ struct ArticleCardView: View {
     @EnvironmentObject var viewModel: ArticleListViewModel
     let article: Article
     var isSelected: Bool = false
+    var width: CGFloat
+    var height: CGFloat
+    var trailingPadding: CGFloat
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -19,7 +22,9 @@ struct ArticleCardView: View {
                 imageUrl: article.picture.url,
                 likes: article.likes,
                 isFavorite: viewModel.isFavorite(article),
-                onToggleFavorite: { viewModel.toggleFavorite(for: article) }
+                onToggleFavorite: { viewModel.toggleFavorite(for: article) },
+                width: width,
+                height: height
             )
             .background(
                 RoundedRectangle(cornerRadius: 24)
@@ -27,7 +32,8 @@ struct ArticleCardView: View {
             )
             ArticleTitleRatingView(
                 name: article.name,
-                ratingString: article.ratingString
+                ratingString: article.ratingString,
+                trailingPadding: trailingPadding
             )
             ArticlePriceView(
                 price: article.price,
@@ -35,7 +41,7 @@ struct ArticleCardView: View {
             )
         }
         .padding(6)
-        .frame(width: 180, alignment: .leading)
+        .frame(width: 190, alignment: .leading)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(articleAccessibilityLabel)
         .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)

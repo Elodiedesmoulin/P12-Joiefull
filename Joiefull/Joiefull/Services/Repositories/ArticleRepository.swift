@@ -14,7 +14,6 @@ final class ArticleRepository: ArticleRepositoryProtocol {
     static let shared = ArticleRepository()
     private let apiService: APIServiceProtocol
     
-    // Prod init
     init(apiService: APIServiceProtocol = APIService.shared) {
         self.apiService = apiService
     }

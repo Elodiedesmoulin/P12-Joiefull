@@ -11,7 +11,7 @@ import SwiftUI
 struct HomeiPadView: View {
     @EnvironmentObject var viewModel: ArticleListViewModel
     @Binding var selectedArticle: Article?
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {

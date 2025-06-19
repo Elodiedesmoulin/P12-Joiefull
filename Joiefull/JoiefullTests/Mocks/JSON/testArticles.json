@@ -1,0 +1,11 @@
+[
+  {
+    "id": 42,
+    "picture": { "url": "http://test", "description": "desc" },
+    "name": "TEST",
+    "category": "TOPS",
+    "price": 99.0,
+    "original_price": 99.0,
+    "likes": 2
+  }
+]

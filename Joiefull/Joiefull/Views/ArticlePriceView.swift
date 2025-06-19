@@ -15,7 +15,7 @@ struct ArticlePriceView: View {
     var body: some View {
         HStack(spacing: 8) {
             Text("\(Int(price))€")
-                .font(.system(size: 16, weight: .bold))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.black)
             if price < originalPrice {
                 Text("\(Int(originalPrice))€")
@@ -25,5 +25,6 @@ struct ArticlePriceView: View {
             }
             Spacer()
         }
+        .padding(.horizontal, 5)
     }
 }

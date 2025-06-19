@@ -23,7 +23,7 @@ final class RepositoryErrorTests: XCTestCase {
         let mockService = MockAPIService()
         mockService.errorToThrow = RepositoryError.invalidURL
         let repo = ArticleRepository(apiService: mockService)
-        let expectation = XCTestExpectation(description: "Erreur Invalid URL reçue via Combine")
+        let expectation = XCTestExpectation(description: "invalidURL Error recieved via Combine")
         
         repo.fetchArticlesPublisher()
             .sink(receiveCompletion: { completion in
@@ -32,7 +32,7 @@ final class RepositoryErrorTests: XCTestCase {
                     expectation.fulfill()
                 }
             }, receiveValue: { _ in
-                XCTFail("Ne doit pas recevoir de valeur")
+                XCTFail("Should not receive value")
             })
             .store(in: &cancellables)
         
@@ -43,7 +43,7 @@ final class RepositoryErrorTests: XCTestCase {
         let mockService = MockAPIService()
         mockService.errorToThrow = RepositoryError.networkError
         let repo = ArticleRepository(apiService: mockService)
-        let expectation = XCTestExpectation(description: "Erreur networkError reçue via Combine")
+        let expectation = XCTestExpectation(description: "networkError recieved via Combine")
         
         repo.fetchArticlesPublisher()
             .sink(receiveCompletion: { completion in
@@ -52,7 +52,7 @@ final class RepositoryErrorTests: XCTestCase {
                     expectation.fulfill()
                 }
             }, receiveValue: { _ in
-                XCTFail("Ne doit pas recevoir de valeur")
+                XCTFail("Should not receive value")
             })
             .store(in: &cancellables)
         
@@ -63,7 +63,7 @@ final class RepositoryErrorTests: XCTestCase {
         let mockService = MockAPIService()
         mockService.errorToThrow = RepositoryError.decodingError
         let repo = ArticleRepository(apiService: mockService)
-        let expectation = XCTestExpectation(description: "Erreur decodingError reçue via Combine")
+        let expectation = XCTestExpectation(description: "decodingError recieved via Combine")
         
         repo.fetchArticlesPublisher()
             .sink(receiveCompletion: { completion in
@@ -72,7 +72,7 @@ final class RepositoryErrorTests: XCTestCase {
                     expectation.fulfill()
                 }
             }, receiveValue: { _ in
-                XCTFail("Ne doit pas recevoir de valeur")
+                XCTFail("Should not receive value")
             })
             .store(in: &cancellables)
         

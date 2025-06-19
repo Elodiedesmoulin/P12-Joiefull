@@ -91,7 +91,7 @@ final class ArticleListViewModel: ObservableObject {
         userStates[article.id] = state
         userStatesStore.save(states: userStates)
     }
-
+    
     func categoriesSorted() -> [String] {
         let cats = articles.map { $0.category }
         return Array(Set(cats)).sorted { label(for: $0) < label(for: $1) }

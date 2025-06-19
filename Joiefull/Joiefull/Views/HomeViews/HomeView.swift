@@ -14,9 +14,9 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(alignment: .leading, spacing: 32) {
+                VStack(alignment: .leading, spacing: 12) {
                     ForEach(viewModel.categoriesSorted(), id: \.self) { category in
-                        ArticleSectionView(category: category)
+                        ArticleSectionView(category: category, width: 190, height: 190, trailingPadding: -11)
                     }
                 }
                 .padding(.top, 16)

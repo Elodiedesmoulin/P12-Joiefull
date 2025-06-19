@@ -30,6 +30,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F608C0192E048B1C005DB509 /* Exceptions for "JoiefullTests" folder in "Joiefull" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Mocks/JSON/invalidArticles.json,
+				Mocks/JSON/testArticles.json,
+			);
+			target = F6AFFA792DDFA1CC00EDFEFB /* Joiefull */;
+		};
 		F6E932862DEE14BB00E4A7AF /* Exceptions for "Joiefull" folder in "Joiefull" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -50,6 +58,9 @@
 		};
 		F6AFFA8A2DDFA1CD00EDFEFB /* JoiefullTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F608C0192E048B1C005DB509 /* Exceptions for "JoiefullTests" folder in "Joiefull" target */,
+			);
 			path = JoiefullTests;
 			sourceTree = "<group>";
 		};
