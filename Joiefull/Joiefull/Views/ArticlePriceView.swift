@@ -17,11 +17,16 @@ struct ArticlePriceView: View {
             Text("\(Int(price))€")
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.black)
+                .accessibilityElement(children: .ignore)
+                .accessibilityHint("Prix actuel de \(Int(price)) euros.")
             if price < originalPrice {
                 Text("\(Int(originalPrice))€")
                     .strikethrough()
                     .font(.system(size: 15))
                     .foregroundColor(.gray)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityHint("Ancien prix, avant réduction, de \(Int(originalPrice)) euros.")
+
             }
             Spacer()
         }

@@ -35,7 +35,7 @@ extension ArticleRepository {
                 } catch let error as RepositoryError {
                     promise(.failure(error))
                 } catch {
-                    promise(.failure(.networkError)) // Ou autre gestion
+                    promise(.failure(.networkError))
                 }
             }
         }

@@ -17,6 +17,9 @@ struct SectionHeaderView: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 4)
             .accessibilityAddTraits(.isHeader)
+            .accessibilityElement(children: .ignore)
+            .accessibilityHint("Catégorie \(title)")
     }
+
 }
 

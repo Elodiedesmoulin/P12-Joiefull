@@ -50,10 +50,13 @@ struct ArticleCardView: View {
 
     var articleAccessibilityLabel: String {
         var label = "\(article.name), \(Int(article.price)) euros"
+        label += "Photo de \(article.picture.description)"
         if article.price < article.originalPrice {
             label += ", en promotion, ancien prix \(Int(article.originalPrice)) euros"
         }
         if viewModel.isFavorite(article) {
+            label += ", enlevé des favoris"
+        } else {
             label += ", ajouté aux favoris"
         }
         label += ", \(article.likes) personnes aiment cet article"

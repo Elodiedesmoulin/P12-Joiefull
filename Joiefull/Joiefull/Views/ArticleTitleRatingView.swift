@@ -30,10 +30,13 @@ struct ArticleTitleRatingView: View {
                     .font(.system(size: 16))
                     .foregroundColor(.secondary)
             }
-            .fixedSize() 
+            .fixedSize()
+            .accessibilityElement(children: .ignore)
+            .accessibilityHint("Cet article est noté \(ratingString).")
         }
         .padding(.top, 2)
         .padding(.trailing, trailingPadding)
         .padding(.horizontal, 5)
+        
     }
 }
