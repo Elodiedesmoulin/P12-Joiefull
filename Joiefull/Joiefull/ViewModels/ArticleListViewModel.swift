@@ -35,7 +35,7 @@ final class ArticleListViewModel: ObservableObject {
     
     func loadArticles() async {
         do {
-            let allArticles: [Article] = try APIService.shared.fetchLocal(endpoint: "clothes")
+            let allArticles: [Article] = try await articleRepository.fetchArticles()
             DispatchQueue.main.async { [weak self] in
                 self?.articles = allArticles
             }
@@ -61,13 +61,12 @@ final class ArticleListViewModel: ObservableObject {
         state.isFavorite.toggle()
         userStates[article.id] = state
         userStatesStore.save(states: userStates)
-        if let idx = articles.firstIndex(where: { $0.id == article.id }) {
-            if state.isFavorite {
-                articles[idx].likes += 1
-            } else {
-                articles[idx].likes = max(0, articles[idx].likes - 1)
-            }
-        }
+    }
+    
+    func displayLikes(for article: Article) -> Int {
+        let base = article.likes
+        let userLike = isFavorite(article) ? 1 : 0
+        return base + userLike
     }
     
     func userRating(for article: Article) -> Int {

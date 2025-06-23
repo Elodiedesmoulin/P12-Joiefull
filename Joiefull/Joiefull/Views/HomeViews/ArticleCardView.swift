@@ -20,7 +20,7 @@ struct ArticleCardView: View {
         VStack(alignment: .leading) {
             ArticleImageWithLikesView(
                 imageUrl: article.picture.url,
-                likes: article.likes,
+                likes: viewModel.displayLikes(for: article),
                 isFavorite: viewModel.isFavorite(article),
                 onToggleFavorite: { viewModel.toggleFavorite(for: article) },
                 width: width,

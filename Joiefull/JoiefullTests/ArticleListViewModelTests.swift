@@ -9,17 +9,18 @@
 import XCTest
 @testable import Joiefull
 
+@MainActor
 final class ArticleListViewModelTests: XCTestCase {
     var viewModel: ArticleListViewModel!
-    var mockStore = UserStatesStore(userDefaults: MockUserDefaults())
+    var mockStore: UserStatesStore!
     var mockRepo: MockArticleRepository!
     var article: Article!
     var article2: Article!
 
     override func setUp() {
         super.setUp()
+        mockStore = UserStatesStore(userDefaults: MockUserDefaults())
         mockRepo = MockArticleRepository()
-        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
         article = Article(
             id: 1,
             picture: Picture(url: "url", description: "desc"),
@@ -38,10 +39,33 @@ final class ArticleListViewModelTests: XCTestCase {
             originalPrice: 25,
             likes: 1
         )
-        viewModel.articles = [article, article2]
     }
 
+    func testLoadArticlesSuccess() async {
+        let mockRepo = MockArticleRepository()
+        let mockStore = UserStatesStore(userDefaults: MockUserDefaults())
+
+        mockRepo.articlesToReturn = [article, article2]
+        let viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+
+        await viewModel.loadArticles()
+        XCTAssertEqual(viewModel.articles.count, 2)
+        XCTAssertEqual(viewModel.articles.first?.name, "T-shirt")
+        XCTAssertNil(viewModel.errorMessage)
+    }
+
+    func testLoadArticlesRepositoryError() async {
+        mockRepo.errorToThrow = RepositoryError.invalidURL
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        await viewModel.loadArticles()
+        XCTAssertEqual(viewModel.articles.count, 0)
+        XCTAssertEqual(viewModel.errorMessage, RepositoryError.invalidURL.errorDescription)
+    }
+
+
     func testIsFavoriteAndToggleFavorite() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         XCTAssertFalse(viewModel.isFavorite(article))
         viewModel.toggleFavorite(for: article)
         XCTAssertTrue(viewModel.isFavorite(article))
@@ -49,15 +73,20 @@ final class ArticleListViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isFavorite(article))
     }
 
-    func testToggleFavoriteLikesIncrementsAndDecrements() {
+    func testDisplayLikesReflectsUserFavorite() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         let originalLikes = article.likes
+        XCTAssertEqual(viewModel.displayLikes(for: article), originalLikes)
         viewModel.toggleFavorite(for: article)
-        XCTAssertEqual(viewModel.articles[0].likes, originalLikes + 1)
+        XCTAssertEqual(viewModel.displayLikes(for: article), originalLikes + 1)
         viewModel.toggleFavorite(for: article)
-        XCTAssertEqual(viewModel.articles[0].likes, originalLikes)
+        XCTAssertEqual(viewModel.displayLikes(for: article), originalLikes)
     }
 
     func testUserRatingAndSetRating() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         XCTAssertEqual(viewModel.userRating(for: article), 0)
         viewModel.setRating(for: article, rating: 4)
         XCTAssertEqual(viewModel.userRating(for: article), 4)
@@ -66,6 +95,8 @@ final class ArticleListViewModelTests: XCTestCase {
     }
 
     func testUserCommentAndSetComment() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         XCTAssertEqual(viewModel.userComment(for: article), "")
         viewModel.setComment(for: article, comment: "Très bien !")
         XCTAssertEqual(viewModel.userComment(for: article), "Très bien !")
@@ -74,24 +105,32 @@ final class ArticleListViewModelTests: XCTestCase {
     }
 
     func testPersistUserStatesOnFavorite() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         viewModel.toggleFavorite(for: article)
         let persisted = mockStore.load()
         XCTAssertTrue(persisted[article.id]?.isFavorite ?? false)
     }
 
     func testPersistUserStatesOnRating() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         viewModel.setRating(for: article, rating: 3)
         let persisted = mockStore.load()
         XCTAssertEqual(persisted[article.id]?.userRating, 3)
     }
 
     func testPersistUserStatesOnComment() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         viewModel.setComment(for: article, comment: "Top")
         let persisted = mockStore.load()
         XCTAssertEqual(persisted[article.id]?.userComment, "Top")
     }
 
     func testCategoriesSortedAndLabel() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article, article2]
         let sorted = viewModel.categoriesSorted()
         XCTAssertTrue(sorted.contains("TOPS"))
         XCTAssertTrue(sorted.contains("BOTTOMS"))
@@ -103,6 +142,8 @@ final class ArticleListViewModelTests: XCTestCase {
     }
 
     func testUnknownArticleStateReturnsDefault() {
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
         let unknown = Article(id: 999, picture: Picture(url: "", description: ""), name: "X", category: "SHOES", price: 1, originalPrice: 1, likes: 0)
         XCTAssertFalse(viewModel.isFavorite(unknown))
         XCTAssertEqual(viewModel.userRating(for: unknown), 0)
@@ -112,11 +153,10 @@ final class ArticleListViewModelTests: XCTestCase {
     func testInitWithLoadedStates() {
         let state = UserArticleState(isFavorite: true, userRating: 5, userComment: "Parfait")
         mockStore.save(states: [article.id: state])
-        let newVM = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
-        XCTAssertEqual(newVM.userRating(for: article), 5)
-        XCTAssertEqual(newVM.userComment(for: article), "Parfait")
-        XCTAssertTrue(newVM.isFavorite(article))
+        viewModel = ArticleListViewModel(userStatesStore: mockStore, articleRepository: mockRepo)
+        viewModel.articles = [article]
+        XCTAssertEqual(viewModel.userRating(for: article), 5)
+        XCTAssertEqual(viewModel.userComment(for: article), "Parfait")
+        XCTAssertTrue(viewModel.isFavorite(article))
     }
-    
-    
 }

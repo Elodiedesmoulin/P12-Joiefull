@@ -59,6 +59,7 @@ final class RepositoryErrorTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
     }
     
+    
     func testFetchArticlesPublisherEmitsDecodingError() {
         let mockService = MockAPIService()
         mockService.errorToThrow = RepositoryError.decodingError
