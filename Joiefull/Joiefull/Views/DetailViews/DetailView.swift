@@ -12,6 +12,7 @@ struct DetailView: View {
     let article: Article
     var maxWidth: CGFloat? = nil
     @EnvironmentObject var viewModel: ArticleListViewModel
+    @StateObject private var keyboardResponder = KeyboardResponder()
     @State private var showShareSheet = false
     
     var body: some View {
@@ -96,7 +97,7 @@ struct DetailView: View {
                     }
                     .padding(.bottom, 24)
                     .padding(.horizontal, 5)
-
+                    
                 }
                 .padding([.horizontal, .bottom], 16)
                 .frame(maxWidth: maxWidth ?? .infinity)
@@ -109,6 +110,13 @@ struct DetailView: View {
                     }
                 }
             }
+            .padding(.bottom, keyboardResponder.keyboardHeight)
         }
+        .onTapGesture {
+            hideKeyboard()
+        }
+        
+        
     }
+    
 }
